@@ -1,10 +1,15 @@
-import React from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router";
+import { auth } from "../firebase.config";
+import Navbar from "../Navbar";
 
 const Rootlayout = () => {
+  useEffect(() =>{
+    console.log(auth.currentUser)
+  },[auth.currentUser])
   return (
     <>
-      <h1>Navbar</h1>
+      <Navbar/>
       <Outlet />
       <h2>Footer</h2>
     </>
