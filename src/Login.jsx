@@ -3,8 +3,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase.config";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { userInfo } from "./Slices/userSlice";
 
 const Login = () => {
+  let dispatch = useDispatch()
   let navigate = useNavigate()
   let [type, settype] = useState(false);
   let [loader , setloader] = useState(false);
@@ -18,6 +21,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, data.mail, data.pass)
       .then((userCredential) => {
         const user = userCredential.user;
+        dispatch(userInfo(user))
         setloader(false);
         toast.success("Account Login Succesflly")
         setTimeout(() => {
@@ -72,7 +76,6 @@ style={{display : loader? "block" : "none"}}
   </svg>
   <span className="sr-only">Loading...</span>
 </div>
-
       <div className="h-[641px] bg-[#101828]  grid items-center justify-center">
         <h1 className="text-[white] mt-[-100px] font-[600] text-[30px]  ml-[170px] relative rotate-[0.2deg]">
           Log-in

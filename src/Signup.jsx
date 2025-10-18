@@ -92,7 +92,7 @@ const handlesignup = () => {
   .then(() => {
     toast.success('Your Account Created Successfully!')
     updateProfile(auth.currentUser, {
-  displayName: info.firstname, photoURL: "https://example.com/jane-q-user/profile.jpg"
+  displayName: info.firstname + info.lastname, photoURL: "https://example.com/jane-q-user/profile.jpg"
 }).then(() => {
   // Profile updated!
   // ...
