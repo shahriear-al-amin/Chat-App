@@ -22,6 +22,7 @@ const Login = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         dispatch(userInfo(user))
+        localStorage.setItem("user" , JSON.stringify(user))
         setloader(false);
         toast.success("Account Login Succesflly")
         setTimeout(() => {

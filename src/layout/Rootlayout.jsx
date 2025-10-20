@@ -1,15 +1,19 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { auth } from "../firebase.config";
-import Navbar from "../Navbar";
+import { useSelector } from "react-redux";
 
 const Rootlayout = () => {
+    let user = useSelector((state)=>state.user.value)
+  let navigator = useNavigate()
   useEffect(() =>{
-    console.log(auth.currentUser)
+    if(!user){
+      navigator("/login")
+    }
   },[auth.currentUser])
   return (
     <>
-      <Navbar/>
+
       <Outlet />
       <h2>Footer</h2>
     </>
