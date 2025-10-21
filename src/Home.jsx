@@ -3,14 +3,21 @@ import { useSelector } from "react-redux";
 import { FaHome, FaUserAlt } from "react-icons/fa";
 import { IoChatboxSharp } from "react-icons/io5";
 
+
 const Home = () => {
   const [active, setActive] = useState("home");
   const user = useSelector((state) => state.user.value);
-
+  const [viewprofile , setviewprofile] = useState(false)
   const handleClick = (tab) => {
     setActive(tab);
   };
-
+  console.log(user)
+  let handlecross = () =>{
+    setviewprofile(false)
+  }
+  let handleshow = () =>{
+    setviewprofile(true)
+  }
   const users = [
     { name: "Jones Willum", imgurl: "user1.jpg" },
     { name: "Garrett Mahoney", imgurl: "user2.jpeg" },
@@ -34,6 +41,20 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#e4e4e4]">
+      <div className="h-[640px] w-[100%] bg-[#ffffff05] absolute z-50 backdrop-blur-[20px] flex items-center justify-center "
+      style={{visibility : viewprofile ? "visible" : "hidden"}}
+      >
+        <div className="h-[140px] w-[300px] bg-[#05bebe] rounded-[10px]">
+          <div className=" flex">
+          <div className="h-[50px] w-[50px] bg-[black] rounded-full ml-[10px] mt-[10px]"></div>
+          <p className=" font-[600] ml-[10px] mt-[13px]">{user.displayName}</p>            
+          </div>
+          <p  className=" font-[600] absolute text-[11px] mt-[-20px] ml-[70px]">{user.email}</p>
+          <button className="px-[20px] py-[10px] text-[13px] rounded-[5px] mt-[20px] ml-[30px] font-[600] bg-[#09f831]">View Profile</button>
+          <button className="px-[20px] py-[10px] text-[13px] rounded-[5px] mt-[20px] ml-[20px] font-[600] bg-[#f30909]">Log Out</button>
+          <i onClick={handlecross} className="fa-solid fa-xmark absolute mt-[-50px] ml-[20px]"></i>
+        </div>
+      </div>
       <div
         className="fixed bottom-6 left-1/2 transform -translate-x-1/2
         flex justify-around items-center
@@ -73,7 +94,7 @@ const Home = () => {
               : "opacity-70 hover:opacity-100"
           }`}
         >
-          <FaUserAlt size={24} />
+          <FaUserAlt size={24} onClick={handleshow} />
         </button>
       </div>
 

@@ -10,8 +10,10 @@ import {
 } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Signup = () => {
+  const db = getDatabase();
   let navigate = useNavigate();
   let [info, setinfo] = useState({
     firstname: "",
@@ -104,7 +106,12 @@ const Signup = () => {
               displayName: info.firstname + " " + info.lastname,
               photoURL: "",
             })
-              .then(() => {})
+              .then(() => {
+                set(ref(db, "users/" + user.uid), {
+                  username: info.firstname + " " + info.lastname,
+                  email: info.mail,
+                });
+              })
               .catch((error) => {});
             setloader(false);
             navigate("/login");
@@ -123,7 +130,7 @@ const Signup = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-            toast.success("Your Account Created Successfully!");
+        toast.success("Your Account Created Successfully!");
         setTimeout(() => {
           navigate("/");
         }, 1000);
@@ -134,7 +141,6 @@ const Signup = () => {
         const email = error.customData.email;
       });
   };
-
   return (
     <div>
       <Toaster position="top-center" reverseOrder={false} />
