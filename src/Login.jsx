@@ -5,6 +5,15 @@ import { auth } from "./firebase.config";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { userInfo } from "./Slices/userSlice";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+  getAuth,
+} from "firebase/auth";
+
 
 const Login = () => {
   let dispatch = useDispatch()
@@ -53,6 +62,24 @@ const Login = () => {
         pass : val
     }))
   };
+    let handlelogingwithgoogle = () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          toast.success("Your Account Created Successfully!");
+          dispatch(userInfo(user))
+        localStorage.setItem("user" , JSON.stringify(user))
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          const email = error.customData.email;
+        });
+    };
   return (
     <div>
     <Toaster position="top-center" reverseOrder={false} />
@@ -130,7 +157,7 @@ style={{display : loader? "block" : "none"}}
           >
             Log in
           </button>
-          <button className="py-[10px] rounded-[5px] text-[14px] font-[600] mt-[345px] ml-[30px] absolute text-[#e9e9e9] bg-[#ffffff1e] px-[55px] flex items-center gap-[10px] cursor-pointer">
+          <button onClick={handlelogingwithgoogle} className="py-[10px] rounded-[5px] text-[14px] font-[600] mt-[345px] ml-[30px] absolute text-[#e9e9e9] bg-[#ffffff1e] px-[55px] flex items-center gap-[10px] cursor-pointer">
             <img className="h-[20px] ml-[-15px]" src="icon.png" alt="" /> Google
           </button>
           <button className="py-[8px] rounded-[5px] text-[14px] font-[600] mt-[345px] ml-[220px] absolute text-[#e9e9e9] bg-[#ffffff1e] px-[55px] flex items-center gap-[10px] cursor-pointer">

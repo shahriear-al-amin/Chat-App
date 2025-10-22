@@ -108,7 +108,7 @@ const Signup = () => {
             })
               .then(() => {
                 set(ref(db, "users/" + user.uid), {
-                  username: info.firstname + " " + info.lastname,
+                  name: info.firstname + " " + info.lastname,
                   email: info.mail,
                 });
               })
@@ -131,6 +131,10 @@ const Signup = () => {
       .then((result) => {
         const user = result.user;
         toast.success("Your Account Created Successfully!");
+        set(ref(db, "users/" + user.uid), {
+          username: user.displayName,
+          email: user.email,
+        });
         setTimeout(() => {
           navigate("/");
         }, 1000);
