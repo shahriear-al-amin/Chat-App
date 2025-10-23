@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 import { useSelector } from 'react-redux';
+import { use } from 'react';
 
 const Userlist = () => {
   const user = useSelector((state) => state.user.value);
@@ -20,7 +21,7 @@ onValue(userRef, (snapshot) => {
   let arr = []
   snapshot.forEach((item) =>{
     if( user.uid != item.key){
-    arr.push(item.val())
+    arr.push({...item.val(), id:item.key})
     }
 //   console.log(item.key)
 //   console.log(user.uid)
@@ -29,6 +30,20 @@ onValue(userRef, (snapshot) => {
 });
   }, [])
   console.log(userlist)
+  let handlesendfriendrequest = (item) =>{
+    console.log(user)
+    console.log(item.id)
+    set(ref(db, 'friendlist/' + user.uid + item.id), {
+    sendername: user.displayName,
+    senderemil: user.email,
+    senderid : user.uid,
+    recivername : item.name,
+    reciveremail : item.email,
+    reciverid : item.id
+  }).then(() =>{
+  alert("Friend request send successfully")
+  })
+}
 
   return (
           <div className="h-[600px] w-[400px] bg-[#f1f1f1] fixed left-0 rounded-tr-[15px] rounded-br-[15px] shadow-md">
@@ -55,7 +70,7 @@ onValue(userRef, (snapshot) => {
               </p>
 
               <div className="flex gap-[6px]">
-                <button className="px-[12px] py-[6px] bg-[#007bff] hover:bg-[#005ecb] transition-all text-white text-[12px] font-[600] rounded-[6px]">
+                <button onClick={() => handlesendfriendrequest(item)} className="px-[12px] py-[6px] bg-[#007bff] hover:bg-[#005ecb] transition-all text-white text-[12px] font-[600] rounded-[6px]">
                   Add Friend
                 </button>
                 <button className="px-[12px] py-[6px] bg-[#8b8b8b] hover:bg-[#16a34a] transition-all text-white text-[12px] font-[600] rounded-[6px]">
