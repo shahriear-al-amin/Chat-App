@@ -1,6 +1,11 @@
-import React from 'react'
+import { getDatabase, onValue, ref } from 'firebase/database';
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
-const Friendlist = () => {
+const Friendrequestlist = () => {
+  const user = useSelector((state) => state.user.value);
+  let [friendrquest , setfriendrquest] = useState([])
+    const db = getDatabase();
       const friendrequest = [
     { name: "Jones Willum", imgurl: "friend1.jpeg" },
     { name: "Garrett Mahoney", imgurl: "friend2.jpeg" },
@@ -8,6 +13,26 @@ const Friendlist = () => {
     { name: "Dayton Garrett", imgurl: "friend4.jpeg" },
     { name: "Dexter Collier", imgurl: "friend5.jpeg" },
   ];
+    useEffect(() => {
+    const userRef = ref(db, 'friendlist');
+  onValue(userRef, (snapshot) => {
+    const data = snapshot.val();
+    let arr = []
+    snapshot.forEach((item) =>{
+      if(user.uid != item.val().senderid && user.uid === item.val().reciverid){
+    arr.push(item.val())
+      }
+  //   console.log(item.val().reciverid)
+  //   console.log(user.uid)
+  // //   console.log(item.key)
+  // //   console.log(user.uid)
+  // // console.log(user)
+  // // console.log(item.val().senderid)
+    })
+    setfriendrquest(arr)
+  });
+    }, [])
+    console.log(friendrquest)
   return (
           <div className="h-[600px] w-[400px] bg-[#f1f1f1] mt-[0px] fixed right-0 rounded-tl-[15px] rounded-bl-[15px] shadow-md">
         <p className="text-center font-[700] text-[22px] py-[10px] text-[#333] border-b border-[#ccc]">
@@ -15,7 +40,7 @@ const Friendlist = () => {
         </p>
 
         <div className="overflow-y-auto h-[540px] px-[10px]">
-          {friendrequest.map((req, i) => (
+          {friendrquest.map((req, i) => (
             <div
               key={i}
               className="flex items-center bg-[#fff] rounded-[10px] p-[8px] my-[10px] shadow-sm hover:shadow-md transition-all duration-200"
@@ -23,13 +48,13 @@ const Friendlist = () => {
               <div className="h-[45px] w-[45px] rounded-full overflow-hidden">
                 <img
                   className="h-full w-full object-cover"
-                  src={req.imgurl}
-                  alt={req.name}
+                  src=""
+                  alt=""
                 />
               </div>
 
               <p className="font-[600] ml-[10px] flex-1 text-[#333]">
-                {req.name}
+                {req.sendername}
               </p>
 
               <div className="flex gap-[6px]">
@@ -47,4 +72,4 @@ const Friendlist = () => {
   )
 }
 
-export default Friendlist
+export default Friendrequestlist

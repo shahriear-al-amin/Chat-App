@@ -5,8 +5,8 @@ import { IoChatboxSharp } from "react-icons/io5";
 import { auth } from "./firebase.config";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router";
-import Friendlist from "./Friendlist";
 import Userlist from "./Userlist";
+import Friendrequestlist from "./Friendrequestlist";
 
 const Home = () => {
   let navigate = useNavigate();
@@ -217,7 +217,7 @@ const Home = () => {
         </div>
       </div>
       <Userlist/>
-      <Friendlist/>
+      <Friendrequestlist/>
     </div>
   );
 };
