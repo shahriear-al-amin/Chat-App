@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { auth } from "../firebase.config";
 import { useSelector } from "react-redux";
+import Navbar from "../Navbar";
 
 const Rootlayout = () => {
     let user = useSelector((state)=>state.user.value)
@@ -13,9 +14,8 @@ const Rootlayout = () => {
   },[auth.currentUser])
   return (
     <>
-
       <Outlet />
-      <h2>Footer</h2>
+      <Navbar/>
     </>
   );
 };

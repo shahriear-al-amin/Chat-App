@@ -4,6 +4,7 @@ import About from "./About";
 import Signup from "./Signup";
 import Login from "./Login";
 import Rootlayout from "./layout/Rootlayout";
+import Chatbox from "./Chatbox";
 const App = () => {
   let router = createBrowserRouter([
     {
@@ -11,7 +12,7 @@ const App = () => {
       Component: Rootlayout,
       children: [
         { index: true, Component: Home },
-        { path: "about", Component: About },
+        { path: "/messages", Component: Chatbox },
       ],
     },
     {

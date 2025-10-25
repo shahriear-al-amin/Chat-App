@@ -7,6 +7,7 @@ const Userlist = () => {
   let [req, setReq] = useState({}); // ✅ object for userwise request tracking
   let [userlist, setuserlist] = useState([]);
   const db = getDatabase();
+  let [requestid,setrequestid] = useState([])
 
   useEffect(() => {
     const userRef = ref(db, 'users');
@@ -36,19 +37,31 @@ const Userlist = () => {
     });
   };
 
-  // ✅ optional: check previously sent requests
-  useEffect(() => {
+
+    useEffect(() => {
     const userRef = ref(db, 'friendlist');
-    onValue(userRef, (snapshot) => {
-      let sentReqs = {};
-      snapshot.forEach((item) => {
-        if (item.val().senderid === user.uid) {
-          sentReqs[item.val().reciverid] = true;
-        }
-      });
-      setReq(sentReqs);
-    });
-  }, [user.uid]);
+  onValue(userRef, (snapshot) => {
+    const data = snapshot.val();
+    let arr = []
+    snapshot.forEach((item) =>{
+    arr.push(item.val().senderid + item.val().reciverid)
+    setrequestid(arr)
+    })
+  });
+    }, [])
+  // ✅ optional: check previously sent requests
+  // useEffect(() => {
+  //   const userRef = ref(db, 'friendlist');
+  //   onValue(userRef, (snapshot) => {
+  //     let sentReqs = {};
+  //     snapshot.forEach((item) => {
+  //       if (item.val().senderid === user.uid) {
+  //         sentReqs[item.val().reciverid] = true;
+  //       }
+  //     });
+  //     setReq(sentReqs);
+  //   });
+  // }, [user.uid]);
 
   return (
     <div className="h-[600px] w-[400px] bg-[#f1f1f1] fixed left-0 rounded-tr-[15px] rounded-br-[15px] shadow-md">
@@ -75,7 +88,7 @@ const Userlist = () => {
             </p>
 
             <div className="flex gap-[6px]">
-              {req[item.id] ? (
+              {/* {req[item.id] ? (
                 <button
                   className="px-[12px] py-[6px] bg-[#d1cece] text-[#000000] text-[12px] font-[600] rounded-[6px]"
                   disabled
@@ -89,7 +102,26 @@ const Userlist = () => {
                 >
                   Add Friend
                 </button>
-              )}
+              )} */}
+
+
+              {
+                requestid.includes(user.uid + item.id) ||
+                requestid.includes(item.id + user.uid)?
+                <button
+                  className="px-[12px] py-[6px] bg-[#d1cece] text-[#000000] text-[12px] font-[600] rounded-[6px]"
+                  disabled
+                >
+                  Requested
+                </button> :
+                <button
+                  onClick={() => handlesendfriendrequest(item)}
+                  className="px-[12px] py-[6px] bg-[#007bff] hover:bg-[#005ecb] transition-all text-white text-[12px] font-[600] rounded-[6px]"
+                >
+                  Add Friend
+                </button>
+
+              }
 
               <button className="px-[12px] py-[6px] bg-[#8b8b8b] hover:bg-[#16a34a] transition-all text-white text-[12px] font-[600] rounded-[6px]">
                 Message
