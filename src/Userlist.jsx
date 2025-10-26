@@ -6,6 +6,7 @@ const Userlist = () => {
   const user = useSelector((state) => state.user.value);
   let [req, setReq] = useState({}); // ✅ object for userwise request tracking
   let [userlist, setuserlist] = useState([]);
+  let [checkconfirmedfriend,setcheckconfirmedfriend] = useState([])
   const db = getDatabase();
   let [requestid,setrequestid] = useState([])
 
@@ -32,8 +33,6 @@ const Userlist = () => {
       reciverid: item.id,
     }).then(() => {
       alert("Friend request sent successfully ✅");
-      //  only mark this user's request as sent
-      setReq((prev) => ({ ...prev, [item.id]: true }));
     });
   };
 
@@ -46,6 +45,20 @@ const Userlist = () => {
     snapshot.forEach((item) =>{
     arr.push(item.val().senderid + item.val().reciverid)
     setrequestid(arr)
+    })
+  });
+    }, [])
+
+
+    useEffect(() => {
+    const userRef = ref(db, 'confirmedfriendlist');
+  onValue(userRef, (snapshot) => {
+    const data = snapshot.val();
+    let arr = []
+    snapshot.forEach((item) =>{
+    arr.push(item.val().acceptorid + item.val().senderid
+)
+    setcheckconfirmedfriend(arr)
     })
   });
     }, [])
@@ -103,9 +116,15 @@ const Userlist = () => {
                   Add Friend
                 </button>
               )} */}
-
-
               {
+               checkconfirmedfriend.includes(user.uid + item.id) ||
+                checkconfirmedfriend.includes(item.id + user.uid)?
+                <button
+                  className="px-[25px] py-[6px] bg-[#00ff40] transition-all text-[black] text-[12px] font-[700] rounded-[6px]"
+                >
+                  Friend
+                </button>
+                :
                 requestid.includes(user.uid + item.id) ||
                 requestid.includes(item.id + user.uid)?
                 <button

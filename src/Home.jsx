@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { auth } from "./firebase.config";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router";
 import Userlist from "./Userlist";
@@ -10,10 +9,33 @@ import Navbar from "./Navbar";
 const Home = () => {
   let navigate = useNavigate();
   const auth = getAuth();
+  const [active, setActive] = useState("home");
+  const user = useSelector((state) => state.user.value);
+  const [viewprofile, setviewprofile] = useState(false);
+  const handleClick = (tab) => {
+    setActive(tab);
+  };
   useEffect(() => {
     console.log(auth.currentUser);
   }, [auth.currentUser]);
 
+  let handlecross = () => {
+    setviewprofile(false);
+  };
+  let handleshow = () => {
+    setviewprofile(true);
+  };
+  let handlelogout = () => {
+    signOut(auth)
+      .then(() => {
+        navigate("/login");
+        localStorage.removeItem("user");
+        dispatch(userInfo(null));
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
 
   const post = [
     {
@@ -35,9 +57,13 @@ const Home = () => {
         "https://images.pexels.com/photos/28494302/pexels-photo-28494302/free-photo-of-cozy-workspace-with-laptop-and-coffee-mug.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     },
   ];
+let handlechatbox = () =>{
+  navigate("/messages")
+}
   return (
     <div className="min-h-screen bg-[#e4e4e4]">
       <Navbar/>
+
       <div className="h-[600px] w-[570px] bg-[#ffffff] fixed mt-[50px] left-1/2 transform -translate-x-1/2 rounded-[15px] shadow-md flex flex-col overflow-hidden z-[40]">
         {/* Header */}
         <div className="h-[60px] border-b border-[#ddd] flex items-center justify-center bg-[#fafafa]">

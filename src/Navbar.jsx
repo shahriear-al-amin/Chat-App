@@ -1,24 +1,35 @@
 import React, { useState } from 'react'
 import { FaHome, FaUserAlt } from "react-icons/fa";
 import { IoChatboxSharp } from "react-icons/io5";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router";
+import { auth } from './firebase.config';
+import { userInfo } from './Slices/userSlice';
+import { signOut } from 'firebase/auth';
 
 
 
 
 const Navbar = () => {
+    let dispatch = useDispatch()
   const [viewprofile, setviewprofile] = useState(false);
     let navigate = useNavigate();
   const user = useSelector((state) => state.user.value);
   const [active, setActive] = useState("home");
-  let handlechatbox = () =>{
-  navigate("/messages")
-}
-  const handleClick = (tab) => {
-    setActive(tab);
-    
-  };
+const handleClick = (tab) => {
+  setActive(tab);
+
+  if (tab === "home") {
+    navigate("/");
+    setviewprofile(false);
+  } else if (tab === "chat") {
+    navigate("/messages");
+    setviewprofile(false);
+  } else if (tab === "user") {
+    setviewprofile(true);
+  }
+};
+
   let handleshow = () => {
     setviewprofile(true);
   };
@@ -39,7 +50,7 @@ const Navbar = () => {
   return (
     <div>
               <div
-                className="h-[640px] w-[100%] bg-[#ffffff05] absolute z-50 backdrop-blur-[20px] flex items-center justify-center "
+                className="h-[640px] w-[100%] bg-[#ffffff05] absolute z-50 backdrop-blur-[20px] flex items-center justify-center top-0 "
                 style={{ visibility: viewprofile ? "visible" : "hidden" }}
               >
                 <div className="h-[140px] w-[300px] bg-[#05bebe] rounded-[10px]">
@@ -76,41 +87,42 @@ const Navbar = () => {
         rounded-2xl
         text-[#cccccc] z-50"
       >
-        <button
-          onClick={() => handleClick("home")}
-          className={`transition-all duration-300 text-[9px] ${
-            active === "home"
-              ? "scale-125 text-white drop-shadow-[0_0_10px_rgba(255,192,203,0.8)]"
-              : "opacity-70 hover:opacity-100"
-          }`}
-        >
-          <FaHome size={26} />
-          Home
-        </button>
+<button
+  onClick={() => handleClick("home")}
+  className={`transition-all duration-300 text-[9px] ${
+    active === "home"
+      ? "scale-125 text-white drop-shadow-[0_0_10px_rgba(255,192,203,0.8)]"
+      : "opacity-70 hover:opacity-100"
+  }`}
+>
+  <FaHome size={26} />
+  Home
+</button>
 
-        <button
-          onClick={() => handleClick("chat")}
-          className={`transition-all duration-300 text-[9px] ${
-            active === "chat"
-              ? "scale-125 text-white drop-shadow-[0_0_10px_rgba(255,192,203,0.8)]"
-              : "opacity-70 hover:opacity-100"
-          }`}
-        >
-          <IoChatboxSharp size={26} onClick={handlechatbox}/>
-          <p className=" ml-[-2px]">Message</p>
-        </button>
+<button
+  onClick={() => handleClick("chat")}
+  className={`transition-all duration-300 text-[9px] ${
+    active === "chat"
+      ? "scale-125 text-white drop-shadow-[0_0_10px_rgba(255,192,203,0.8)]"
+      : "opacity-70 hover:opacity-100"
+  }`}
+>
+  <IoChatboxSharp size={26} />
+  <p className=" ml-[-2px]">Message</p>
+</button>
 
-        <button
-          onClick={() => handleClick("user")}
-          className={`transition-all duration-300  text-[9px] ${
-            active === "user"
-              ? "scale-125 text-white drop-shadow-[0_0_10px_rgba(255,192,203,0.8)]"
-              : "opacity-70 hover:opacity-100"
-          }`}
-        >
-          <FaUserAlt size={24} onClick={handleshow} />
-          <p className=" mt-[2px]">Profile</p>
-        </button>
+<button
+  onClick={() => handleClick("user")}
+  className={`transition-all duration-300  text-[9px] ${
+    active === "user"
+      ? "scale-125 text-white drop-shadow-[0_0_10px_rgba(255,192,203,0.8)]"
+      : "opacity-70 hover:opacity-100"
+  }`}
+>
+  <FaUserAlt size={24} />
+  <p className=" mt-[2px]">Profile</p>
+</button>
+
       </div>
     </div>
   )
