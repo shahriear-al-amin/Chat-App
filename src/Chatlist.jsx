@@ -1,8 +1,11 @@
 import { Database, getDatabase, onValue, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectedUser } from './Slices/Selecteduserslise';
 
 const Chatlist = () => {
+const selecteduser = useSelector((state) => state.activeuser.value);
+  let dispatch = useDispatch()
     let [chatlist,setchatlist]= useState([])
       const user = useSelector((state) => state.user.value);
   const db = getDatabase();
@@ -16,12 +19,19 @@ const Chatlist = () => {
     arr.push(item.val())
     }
     setchatlist(arr)
-    console.log(arr)
+    // console.log(arr)
     })
   });
     }, [])
 
-console.log(chatlist)
+
+    let handleactive = (chatinfo) =>{
+      alert("dsjfhgdsg")
+      console.log(chatinfo)
+      dispatch(selectedUser(chatinfo))
+    }
+
+// console.log(chatlist)
 
   return (
     <div>
@@ -81,7 +91,7 @@ console.log(chatlist)
             className="w-12 h-12 rounded-full"
           />
         </div>
-        <div className="flex-1">
+        <div onClick={() =>handleactive(chat)} className="flex-1">
           <h2 className="text-lg font-semibold">{chat.sendername === user.displayName ? chat.acceptorname : chat.sendername}</h2>
           <p className="text-gray-600">Click to chat</p>
         </div>
