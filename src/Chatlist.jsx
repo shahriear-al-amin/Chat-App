@@ -1,14 +1,15 @@
 import { Database, getDatabase, onValue, ref } from 'firebase/database';
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { selectedUser } from './Slices/Selecteduserslise';
 
 const Chatlist = () => {
-const selecteduser = useSelector((state) => state.activeuser.value);
   let dispatch = useDispatch()
     let [chatlist,setchatlist]= useState([])
-      const user = useSelector((state) => state.user.value);
+    const user = useSelector((state) => state.user.value);
   const db = getDatabase();
+
+  
     useEffect(() => {
     const userRef = ref(db, 'confirmedfriendlist');
   onValue(userRef, (snapshot) => {
@@ -25,11 +26,18 @@ const selecteduser = useSelector((state) => state.activeuser.value);
     }, [])
 
 
-    let handleactive = (chatinfo) =>{
-      alert("dsjfhgdsg")
-      console.log(chatinfo)
-      dispatch(selectedUser(chatinfo))
-    }
+// component.js
+let handleactive = (chatinfo) => {
+  console.log(chatinfo)
+  console.log(user)
+  if(user.uid == chatinfo.senderid){
+  dispatch(selectedUser({name : chatinfo.acceptorname, email : chatinfo.acceptormail , id : chatinfo.acceptorid}));
+  } else{
+  dispatch(selectedUser({name : chatinfo.sendername, email : chatinfo.sendermail , id : chatinfo.senderid}));
+  }
+};
+    const messageuser = useSelector((state) => state.activeUser.value);
+    // console.log(messageuser)
 
 // console.log(chatlist)
 
@@ -83,7 +91,7 @@ const selecteduser = useSelector((state) => state.activeuser.value);
 {
   chatlist.map((chat, i) => {
     return (
-      <div key={i} className="flex items-center mb-4 cursor-pointer hover:bg-[#d1d0d0] p-2 rounded-md">
+      <div key={i} className={`flex items-center mb-4 cursor-pointer p-2 rounded-md ${ chat.senderid == messageuser.id || chat.acceptorid == messageuser.id ? "bg-[#bebcbc]":"bg-[white]"}`}>
         <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
           <img
             src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
