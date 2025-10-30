@@ -65,6 +65,7 @@ const Chatbox = () => {
                   <div className="flex justify-end mb-4 cursor-pointer">
                     <div className="flex max-w-96 bg-indigo-500 text-white rounded-lg p-3 gap-3">
                       <p>{item.textcontent}</p>
+                      <p className=" absolute text-[black] mt-[40px] text-[11px] ml-[-100px]">Just a secend ago</p>
                     </div>
                     <div className="w-9 h-9 rounded-full flex items-center justify-center ml-2">
                       <img
