@@ -1,1 +1,13 @@
 @import "tailwindcss";
+.message-bubble:hover div:nth-child(2) {
+  display: block;
+}
+.message-bubble div:nth-child(2) {
+  display: none;
+}
+.message-bubble2:hover div:nth-child(2) {
+  display: block;
+}
+.message-bubble2 div:nth-child(2) {
+  display: none;
+}

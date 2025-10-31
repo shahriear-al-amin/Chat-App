@@ -43,9 +43,9 @@ let handleactive = (chatinfo) => {
 
   return (
     <div>
-            <div className="w-[300px] bg-white border-r border-gray-300">
+            <div className="w-[300px] bg-gray-600 border-r border-[#1f1e1e38]">
       {/* Sidebar Header */}
-      <header className="p-4 border-b border-gray-300 flex justify-between items-center bg-[#135555] text-white">
+      <header className="p-4 border-b border-[#1f1e1e38] flex justify-between items-center bg-[#6e7c7c] text-white">
         <h1 className="text-2xl font-semibold">Chat Web</h1>
         <div className="relative">
           <button id="menuButton" className="focus:outline-none">
@@ -62,7 +62,7 @@ let handleactive = (chatinfo) => {
           {/* Menu Dropdown */}
           <div
             id="menuDropdown"
-            className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg hidden"
+            className="absolute right-0 mt-2 w-48 bg-white border border-[#1f1e1e38] rounded-md shadow-lg hidden"
           >
             <ul className="py-2 px-3">
               <li>
@@ -91,7 +91,7 @@ let handleactive = (chatinfo) => {
 {
   chatlist.map((chat, i) => {
     return (
-      <div key={i} className={`flex items-center mb-4 cursor-pointer p-2 rounded-md ${ chat.senderid == messageuser.id || chat.acceptorid == messageuser.id ? "bg-[#bebcbc]":"bg-[white]"}`}>
+      <div key={i} className={` flex items-center mb-4 cursor-pointer p-2 rounded-md ${ chat.senderid == messageuser.id || chat.acceptorid == messageuser.id ? "bg-[#8080803b]":"bg-gray-600"}`}>
         <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
           <img
             src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
@@ -99,9 +99,9 @@ let handleactive = (chatinfo) => {
             className="w-12 h-12 rounded-full"
           />
         </div>
-        <div onClick={() =>handleactive(chat)} className="flex-1">
-          <h2 className="text-lg font-semibold">{chat.sendername === user.displayName ? chat.acceptorname : chat.sendername}</h2>
-          <p className="text-gray-600">Click to chat</p>
+        <div onClick={() =>handleactive(chat)} className="flex-1 ">
+          <h2 className="  text-[white] font-[600]">{chat.sendername === user.displayName ? chat.acceptorname : chat.sendername}</h2>
+          <p className="text-gray-400">Click to chat</p>
         </div>
       </div>
     );
