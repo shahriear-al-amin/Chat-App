@@ -28,8 +28,8 @@ const Chatlist = () => {
 
 // component.js
 let handleactive = (chatinfo) => {
-  console.log(chatinfo)
-  console.log(user)
+  // console.log(chatinfo)
+  // console.log(user)
   if(user.uid == chatinfo.senderid){
   dispatch(selectedUser({name : chatinfo.acceptorname, email : chatinfo.acceptormail , id : chatinfo.acceptorid}));
   } else{

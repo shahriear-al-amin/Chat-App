@@ -13,7 +13,7 @@ const Chatbox = () => {
   let [message, setmessage] = useState("");
   let [showmssage, setshowmessage] = useState([]);
   let handlesendmessage = () => {
-    console.log(message);
+    // console.log(message);
     const messageRef = push(ref(db, "messages"));
     set(messageRef, {
       sendername: user.displayName,
@@ -41,7 +41,7 @@ const Chatbox = () => {
           (msg.senderid === user.uid && msg.acceptorid === messageuser.id) ||
           (msg.senderid === messageuser.id && msg.acceptorid === user.uid)
         ) {
-          arr.push(msg);
+          arr.push({...msg, id : item.key});
         }
       });
       setshowmessage(arr);
@@ -52,12 +52,19 @@ const Chatbox = () => {
   };
   let handlebubble = (item) => {
     lethover(!hover);
-    console.log(showmssage)
+    // console.log(item.id)
   };
   let handlebubble2 = () => {
     lethover2(!hover2);
   };
+  let handleunsend = () =>{
+    alert("hhhhh")
+  //   // console.log(item.id)
   // console.log(showmssage);
+  // showmssage.map((key) =>{
+  //   console.log(key.id)
+  // })
+  }
   return (
     <div>
       <>
@@ -98,7 +105,7 @@ const Chatbox = () => {
                         className=" h-[136px] w-[150px] bg-gray-800 absolute ml-[-200px] rounded-[5%] overflow-hidden"
                       >
                         <ul className=" grid gap-[px]">
-                          <li className=" hover:bg-[#ffffff54] py-[5px] text-center font-[600] cursor-pointer">
+                          <li onClick={handleunsend} className=" hover:bg-[#ffffff54] py-[5px] text-center font-[600] cursor-pointer">
                             Unsend
                           </li>
                           <li className=" hover:bg-[#ffffff54] py-[5px] text-center font-[600] cursor-pointer">
