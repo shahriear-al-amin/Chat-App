@@ -16,7 +16,7 @@ const Home = () => {
     setActive(tab);
   };
   useEffect(() => {
-    console.log(auth.currentUser);
+    // console.log(auth.currentUser);
   }, [auth.currentUser]);
 
   let handlecross = () => {

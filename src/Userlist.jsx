@@ -22,7 +22,7 @@ const Userlist = () => {
       setuserlist(arr);
     });
   }, [user.uid]);
-console.log(userlist)
+// console.log(userlist)
   let handlesendfriendrequest = (item) => {
     set(ref(db, 'friendlist/' + (user.uid + item.id)), {
       sendername: user.displayName,

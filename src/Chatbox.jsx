@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Chatlist from "./Chatlist";
 import { useSelector } from "react-redux";
-import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import { getDatabase, onValue, push, ref, remove, set, update } from "firebase/database";
 import moment from "moment";
 
 const Chatbox = () => {
   const messageuser = useSelector((state) => state.activeUser.value);
   const user = useSelector((state) => state.user.value);
-  let [hover, lethover] = useState(false);
+  let [hover, lethover] = useState(null);
   let [hover2, lethover2] = useState(false);
   const db = getDatabase();
   let [message, setmessage] = useState("");
   let [showmssage, setshowmessage] = useState([]);
+  let [unsend,setunsend] = useState(false)
   let handlesendmessage = () => {
     // console.log(message);
     const messageRef = push(ref(db, "messages"));
@@ -51,20 +52,40 @@ const Chatbox = () => {
     lethover("block");
   };
   let handlebubble = (item) => {
-    lethover(!hover);
     // console.log(item.id)
+    showmssage.map((key) =>{
+      if(item.id == key.id){
+      // console.log(key.id)
+      lethover(hover === item.id ? null : item.id);
+      }
+    })
   };
   let handlebubble2 = () => {
     lethover2(!hover2);
   };
-  let handleunsend = () =>{
-    alert("hhhhh")
-  //   // console.log(item.id)
+  let handleunsend = (item) =>{
+    // console.log(item.id)
   // console.log(showmssage);
-  // showmssage.map((key) =>{
-  //   console.log(key.id)
-  // })
-  }
+  let unsendtext = "";
+  showmssage.forEach((key) =>{
+    if(item.id === key.id){
+    // console.log(item.id)
+    if(item.senderid === user.uid){
+      unsendtext = "⊘ 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥"
+    }else{
+      unsendtext = "⊘ User 𝘶𝘯𝘴𝘦𝘯𝘥 𝘵𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦"
+    }
+      update(ref(db, "messages/" + item.id), {textcontent:unsendtext})
+    // remove(ref(db, "messages/" + item.id))
+    .then(() =>{
+      lethover(null)
+      alert("Message Unsend")
+    }).catch((err) =>{
+      console.log(err)
+    });
+    }
+  });
+  };
   return (
     <div>
       <>
@@ -80,7 +101,7 @@ const Chatbox = () => {
             {/* Chat Messages */}
             <div className="h-screen overflow-y-auto p-4 pb-36 bg-gray-600">
               {/* Incoming Message */}
-              {showmssage.map((item) =>
+              {showmssage.map((item,i) =>
                 item.senderid === user.uid ? (
                   <div className="flex justify-end mb-4">
                     <div className="message-bubble flex flex-col max-w-[300px] bg-gray-500 text-white rounded-[5px] p-2">
@@ -90,7 +111,7 @@ const Chatbox = () => {
                           onClick={() => handlebubble(item)}
                           className=" h-[30px] w-[30px] bg-[#c7c7bb] rounded-[60px] flex justify-center "
                         >
-                          <i class="fa-solid fa-ellipsis-vertical mt-[7px] cursor-pointer text-[black]"></i>
+                          <i className="fa-solid fa-ellipsis-vertical mt-[7px] cursor-pointer text-[black]"></i>
                         </span>
                       </div>
                       <span className="text-[9px] text-gray-200 self-end mt-1">
@@ -100,12 +121,12 @@ const Chatbox = () => {
                       </span>
                       <span
                         style={{
-                          display: hover ? "block" : "none",
+                          display: hover === item.id ? "block" : "none",
                         }}
                         className=" h-[136px] w-[150px] bg-gray-800 absolute ml-[-200px] rounded-[5%] overflow-hidden"
                       >
                         <ul className=" grid gap-[px]">
-                          <li onClick={handleunsend} className=" hover:bg-[#ffffff54] py-[5px] text-center font-[600] cursor-pointer">
+                          <li onClick={() =>handleunsend(item)} className=" hover:bg-[#ffffff54] py-[5px] text-center font-[600] cursor-pointer">
                             Unsend
                           </li>
                           <li className=" hover:bg-[#ffffff54] py-[5px] text-center font-[600] cursor-pointer">
