@@ -20,6 +20,7 @@ import { IoMdNotifications } from "react-icons/io";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { FaLock } from "react-icons/fa6";
 import { TbXboxX } from "react-icons/tb";
+import { MdBlock } from "react-icons/md";
 
 const Chatbox = () => {
   const messageuser = useSelector((state) => state.activeUser.value);
@@ -31,6 +32,7 @@ const Chatbox = () => {
   let [showmssage, setshowmessage] = useState([]);
   let [unsend, setunsend] = useState(false);
   let [showprofileinfo, setshowprofileinfo] = useState(false);
+  let [block, setblock] = useState([]);
 
   let handlesendmessage = () => {
     // console.log(message);
@@ -72,6 +74,7 @@ const Chatbox = () => {
   };
   let handlebubble = (item) => {
     // console.log(item.id)
+    setsetails(item);
     showmssage.map((key) => {
       if (item.id == key.id) {
         // console.log(key.id)
@@ -95,7 +98,6 @@ const Chatbox = () => {
           unsendtext = "⊘ User 𝘶𝘯𝘴𝘦𝘯𝘥 𝘵𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦";
         }
         update(ref(db, "messages/" + item.id), { textcontent: unsendtext })
-          // remove(ref(db, "messages/" + item.id))
           .then(() => {
             lethover(null);
             alert("Message Unsend");
@@ -109,6 +111,32 @@ const Chatbox = () => {
   let handlemessageuserifo = () => {
     setshowprofileinfo(true);
   };
+
+  let handleblock = () => {
+    console.log(messageuser);
+    const blocklistRef = push(ref(db, "blocklist"));
+    set(blocklistRef, {
+      blockby: user.displayName,
+      blockbyid: user.uid,
+      blockedusername: messageuser.name,
+      blockeduserid: messageuser.id,
+    }).then(() => {
+      alert("Blocked");
+    });
+  };
+  useEffect(() => {
+    const userRef = ref(db, "blocklist");
+    onValue(userRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        console.log(item.val());
+        setblock(item.val());
+      });
+    });
+  }, [db, user.uid, messageuser.id]);
+  let handleunblock = () => {
+    alert("User Unblocked");
+    remove(ref(db, "blocklist/" + item))
+  };
   return (
     <div>
       <>
@@ -116,7 +144,7 @@ const Chatbox = () => {
           style={{
             display: showprofileinfo ? "block" : "none",
             // right: showprofileinfo ? "0px" : "-400px",
-            transition : "2s"
+            transition: "2s",
           }}
           className=" h-full w-[400px] bg-[#ffffff6e] absolute right-0 z-50 backdrop-blur-2xl transition-all"
         >
@@ -165,6 +193,32 @@ const Chatbox = () => {
                 <span className=" font-[500] text-[12px] ml-[-3px]">
                   Search
                 </span>
+              </button>
+            </div>
+          </div>
+          <div>
+            <div className=" flex justify-around mt-[50px]">
+              {block.blockbyid == messageuser.id ||
+              block.blockeduserid == messageuser.id ? (
+                <button
+                  onClick={handleunblock}
+                  className="flex items-center gap-2 font-[600] text-[14px] px-[50px] py-[10px] bg-[#02020259] rounded-[5px] backdrop-blur-2xl"
+                >
+                  Unblock
+                  <MdBlock size={18} className=" text-[red] mt-[2px]" />
+                </button>
+              ) : (
+                <button
+                  onClick={handleblock}
+                  className="flex items-center gap-2 font-[600] text-[14px] px-[50px] py-[10px] bg-[#02020259] rounded-[5px] backdrop-blur-2xl"
+                >
+                  Block User{" "}
+                  <MdBlock size={18} className=" text-[red] mt-[2px]" />
+                </button>
+              )}
+
+              <button className=" text-[red] font-[600] text-[14px] px-[50px] py-[10px] bg-[#02020259] rounded-[5px] backdrop-blur-2xl">
+                Report User
               </button>
             </div>
           </div>
@@ -313,22 +367,27 @@ const Chatbox = () => {
             </div>
             {/* Chat Input */}
             <footer className="bg-gray-600 border-t border-[#1f1e1e38] p-4 absolute bottom-0 w-3/4 ">
-              <div className="flex items-center ">
-                <input
-                  value={message || ""}
-                  onChange={handeltextcontent}
-                  type="text"
-                  placeholder="Type a message..."
-                  className="w-full p-2 rounded-md border border-[#1f1e1e38] focus:outline-none focus:bg-[#ffffff4d] text-[#ffffff] font-[600]"
-                />
+              {block.blockbyid == messageuser.id ||
+              block.blockeduserid == messageuser.id ? (
+                <h1 className=" text-[white] font-[500]">User Blocked</h1>
+              ) : (
+                <div className="flex items-center ">
+                  <input
+                    value={message || ""}
+                    onChange={handeltextcontent}
+                    type="text"
+                    placeholder="Type a message..."
+                    className="w-full p-2 rounded-md border border-[#1f1e1e38] focus:outline-none focus:bg-[#ffffff4d] text-[#ffffff] font-[600]"
+                  />
 
-                <button
-                  onClick={handlesendmessage}
-                  className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-2"
-                >
-                  Send
-                </button>
-              </div>
+                  <button
+                    onClick={handlesendmessage}
+                    className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-2"
+                  >
+                    Send
+                  </button>
+                </div>
+              )}
             </footer>
           </div>
         </div>
