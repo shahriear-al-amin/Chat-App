@@ -112,30 +112,33 @@ const Chatbox = () => {
     setshowprofileinfo(true);
   };
 
-  let handleblock = () => {
-    console.log(messageuser);
-    const blocklistRef = push(ref(db, "blocklist"));
-    set(blocklistRef, {
-      blockby: user.displayName,
-      blockbyid: user.uid,
-      blockedusername: messageuser.name,
-      blockeduserid: messageuser.id,
-    }).then(() => {
-      alert("Blocked");
-    });
-  };
+let handleblock = () => {
+  console.log(messageuser);
+  const blocklistRef = ref(db, "blocklist/" + user.uid+ messageuser.id);
+  set(blocklistRef, {
+    blockby: user.displayName,
+    blockbyid: user.uid,
+    blockedusername: messageuser.name,
+    blockeduserid: messageuser.id,
+  }).then(() => {
+    alert("Blocked");
+  });
+};
+
   useEffect(() => {
     const userRef = ref(db, "blocklist");
     onValue(userRef, (snapshot) => {
       snapshot.forEach((item) => {
         console.log(item.val());
         setblock(item.val());
+console.log(item.key)
       });
     });
   }, [db, user.uid, messageuser.id]);
+
   let handleunblock = () => {
     alert("User Unblocked");
-    remove(ref(db, "blocklist/" + item))
+    remove(ref(db, "blocklist/" +  user.uid + messageuser.id))
   };
   return (
     <div>
